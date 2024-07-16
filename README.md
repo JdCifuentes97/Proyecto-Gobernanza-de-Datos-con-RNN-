@@ -24,6 +24,7 @@ El conjunto de datos utilizado para entrenar y evaluar el modelo incluye registr
 3. **Modelado**: Desarrollo y entrenamiento del modelo LSTM para la predicción de errores.
 4. **Evaluación del Modelo**: Medición del rendimiento del modelo usando métricas como el MAE y RMSE.
 5. **Visualización de Resultados**: Gráficos de predicción y análisis de pérdidas potenciales por errores de expedición.
+6. **Gobernanza de Datos**: Desarrollo de una gobernanza de datos teniendo encuenta los resultados mostrados.
 
 ### 📈 Resultados
 
