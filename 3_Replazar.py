@@ -1,0 +1,116 @@
+import pandas as pd
+from pathlib import Path
+import re
+
+# Ruta del archivo combinado
+combined_file_path = Path(r'ruta del archivo csv')
+
+# Leer el archivo como texto
+with open(combined_file_path, 'r', encoding='utf-8') as file:
+    text = file.read()
+
+# Definir las sustituciones para la Ronda 4
+replacements1 = {
+
+    r'910;SEAS BOGOTA ROJO ASOCIADOS LTDA10632;PUNTO DE VENTA JINETH BERMUDEZ': '910;SEAS BOGOTA ROJO ASOCIADOS LTDA;10632;PUNTO DE VENTA JINETH BERMUDEZ',
+    r'425;CARTAGENA RONDA REAL': '425;CARTAGENA CENTRO',
+    r'425;CARTAGENA CENTRO AMURALLADO': '425;CARTAGENA CENTRO',
+    r'440;CARTAGENA CENTRO AMURALLADO': '440;CARTAGENA',
+    r'460;CAOBOS': '460;CUCUTA CAOBOS',
+    r'470;IBAGUE': '470;GIRARDOT',
+    r'500;FUNDADORES': '500;MANIZALES FUNDADORES',
+    r'520;LAURELES': '520;MEDELLIN LAURELES',
+    r'530;POBLADO': '530;MEDELLIN POBLADO',
+    r'575;MEDELLIN SECTOR SOLIDARIO': '575;MEDELLIN SECTOR SOLIDARIO 2',
+    r'816;BOGOTA KENNEDY': '816;SEAS BOG SERV INTEGRALES DE SEGUROS',
+    r'816;SEAS BOG. SERV. INTEGRALES DE SEGUROS': '816;SEAS BOG SERV INTEGRALES DE SEGUROS',
+    r'830;SEAS-GES BOGOTA': '830;SEAS BOGOTA CENTRO OPERATIVO DE SEGUROS',
+    r'910;SEAS-GES BOGOTA': '910;SEAS BOGOTA ROJO ASOCIADOS LTDA',
+    r'910;SEAS BOGOTA ROJO ASOCIADOS LTDA.': '910;SEAS BOGOTA ROJO ASOCIADOS LTDA',
+    r'910;SEAS BOGOTA ROJO ASOCIADOS LTDA0': '910;SEAS BOGOTA ROJO ASOCIADOS LTDA;',
+    r'960;SEAS-GES BOGOTA': '960;SEAS BOGOTA FES',
+    r'980;SEAS-GES BOGOTA': '980;GESTION Y EFICACIA EN SEGUROS GES CIA LT',
+    r'990;SEAS-GES BOGOTA': '990;SEAS GES - LICITACION SENA',
+    r'837;SEAS BOG. DIR. LICITACIONES FUERZAS MIL.': '837;SEAS BOG DIR LICITACIONES FUERZAS MIL',
+    r'837;SEAS BOGOTA DIRECTA LICITACIONES': '837;SEAS BOG DIR LICITACIONES FUERZAS MIL',
+    r'843;SEAS BOGOTA DIRECTA LICITACIONES': '843;SEAS DIR LICITACION - BCO GNB SUDAMERIS',
+    r'844;SEAS BOGOTA DIRECTA LICITACIONES': '844;SEAS BTA DIRECTA LICIT-MINHACIENDA PRO3',
+    r'847;SEAS BOGOTA DIRECTA LICITACIONES': '847;SEAS DIR LICITACIONES - FONDO NAL AHORRO',
+    r'848;SEAS BOGOTA DIRECTA LICITACIONES': '848;SEAS DIRECTA LICITACIONES-MUNIC MEDELLIN',
+    r'930;SEAS BOGOTA DIRECTA LICITACIONES': '930;SEAS BOGOTA DIRECTA LICITACIONES ORIGINAL',
+    r'945;SEAS BOGOTA DIRECTA LICITACIONES': '945;SEAS BOGOTA DIR LICITACIONES - PONAL 2',
+    r'945;SEAS BOG DIR LIC PONAL2': '945;SEAS BOGOTA DIR LICITACIONES - PONAL 2',
+    r'965;SEAS BOGOTA DIRECTA LICITACIONES': '965;DIRECTA LICITACIONES - MUNICIPIO DE CALI',
+    r'965;DIR LIC- MUNICIPIO DE CALI': '965;DIRECTA LICITACIONES - MUNICIPIO DE CALI',
+    r'825;BOGOTA LA SOLEDAD': '825;SEAS BOGOTA GGS PROFESIONALES EN SEGUROS',
+}
+
+# Aplicar las sustituciones a todo el texto
+for pattern, replacement in replacements1.items():
+    text = re.sub(pattern, replacement, text)
+
+# Sobrescribir el archivo original con el texto modificado
+with open(combined_file_path, 'w', encoding='utf-8') as file:
+    file.write(text)
+
+# Cargar el archivo modificado en un DataFrame
+df = pd.read_csv(combined_file_path, delimiter=';')
+
+# Definir la función para estandarizar nombres de lugares usando regex
+def standardize_places(text):
+    replacements = {
+        # RONDA 1
+        r'BOGOTA CALLE 17': 'BOGOTA CENTRO INTERNACIONAL',
+        r'\b(?<!BOGOTA )AVENIDA SUBA\b': 'BOGOTA AVENIDA SUBA',
+        r'\b(?<!BARRANQUILLA )CARRERA 47\b': 'BARRANQUILLA CARRERA 47',
+        r'\b(?<!BOGOTA )MODELIA\b': 'BOGOTA CENTRO INTERNACIONAL',
+        r'\bBOGOTA LA SOLEDAD\b': 'BOGOTA PARK WAY',
+        r'\b(?<!BOGOTA )LA SOLEDAD\b': 'BOGOTA PARK WAY',
+        r'\b(?<!BOGOTA )SANTA PAULA\b': 'BOGOTA SANTA PAULA',
+        r'\b(?<!BOGOTA )KENNEDY\b': 'BOGOTA KENNEDY',
+        r'(?<!BOGOTA )CENTRO INTERNACIONAL': 'BOGOTA CENTRO INTERNACIONAL',
+        r'\b(?<!BUCARAMANGA )CABECERA\b': 'BUCARAMANGA CABECERA',
+        r'\bPOPAYAN DELEGADA\b': 'SEAS-POPAYAN',
+        r'\bSEAS-ASEGURANDOTE BUCARAMANGA CENTRO\b': 'SEAS ASEGURANDOTE BUCARAMANGA CENTRO',
+        r'SEAS CUCUTA PROMOVEMOS SEGUROS LTDA.': 'SEAS CUCUTA PROMOVEMOS SEGUROS LTDA',
+        r'\bSEAS-PROMOVEMOS CUCUTA\b': 'SEAS CUCUTA PROMOVEMOS SEGUROS LTDA',
+        r'SEAS BUCARAMANGA SEGUROS OLMA LTDA.': 'SEAS BUCARAMANGA SEGUROS OLMA LTDA',
+        r'\bSEAS-OM SEGUROS BUCARAMANGA\b': 'SEAS BUCARAMANGA SEGUROS OLMA LTDA',
+        r'\bSEAS MEDELLIN FUTURO\b': 'SEAS-FUTURO SEGUROS MEDELLIN',
+
+        # RONDA 2
+
+        r'\bMED SEC SOLI COOPFINANTIOQUIA\b': 'MEDELLIN SECTOR SOLIDARIO',
+        r'NEGOCIOS CORPORATIVOS FALABELLA AUT.': 'NEGOCIOS CORPORATIVOS FALABELLA AUT',
+        r'NEGOCIOS CORPORATIVOS - INCEFIN S.A.S.': 'NEGOCIOS CORPORATIVOS - INCEFIN SAS',
+        r'\bCOOPERATIVA EMPLEADOS DE CAFAM-COOPCAFAM\b': 'COOPCAFAM - C. EMPLEADOS DE CAFAM',
+        r'SEAS BOG. CENTRO DE ATENCION DE SEGUROS': 'SEAS BOG CENTRO DE ATENCION DE SEGUROS',
+        r'\bSEAS-SAN GIL\b': 'SEAS SAN GIL',
+
+        # RONDA 3
+        r'SEAS-MAC SEGUROS BOGOTA': 'SEAS BOGOTA MAC SEGUROS LTDA',
+        r'SEAS-FACIL SEGUROS BOGOTA': 'SEAS BOGOTA FACIL SEGUROS LTDA',
+        r'SEAS BOGOTA SINERGIA AS LTDA.': 'SEAS BOGOTA SINERGIA AS LTDA',
+        r'SEAS-AVANCE BOGOTA': 'SEAS BOGOTA AVANCE SEGURO LTDA',
+        r'SEAS BOGOTA AVANCE SEGURO LTDA.': 'SEAS BOGOTA AVANCE SEGURO LTDA',
+        r'GESTION Y EFICACIA EN SEGUROS GES CIA LT': 'SEAS BOGOTA AVANCE SEGURO LTDA',
+        r'MED SEC SOL JHON F BOGOTA KENNEDY': 'MEDELLIN SECTOR SOLIDARIO 2',
+    }
+
+    for pattern, replacement in replacements.items():
+        text = re.sub(pattern, replacement, text)
+    return text
+
+# Reemplazar "a m" por "AM" en la columna 'fec endoso'
+df['fec endoso'] = df['fec endoso'].str.replace('a m', 'AM')
+
+# Reemplazar "p m" por "PM" en la columna 'fec endoso'
+df['fec endoso'] = df['fec endoso'].str.replace('p m', 'PM')
+
+# Aplicar la función de estandarización de nombres de lugares en todo el DataFrame
+df = df.applymap(lambda x: standardize_places(str(x)) if isinstance(x, str) else x)
+
+# Guardar el DataFrame modificado en el archivo CSV
+df.to_csv(combined_file_path, index=False, sep=';')
+
+print("Estandarización de nombres de lugares completada.")
