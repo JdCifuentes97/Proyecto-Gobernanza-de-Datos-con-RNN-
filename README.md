@@ -28,7 +28,7 @@ El conjunto de datos utilizado para entrenar y evaluar el modelo incluye registr
 
 ### 📈 Resultados
 
-El modelo LSTM ha sido capaz de predecir con una precisión considerable los errores de expedición, lo que permite a la empresa tomar decisiones más informadas y reducir pérdidas.
+El modelo LSTM ha sido capaz de predecir con una precisión considerable los errores de expedición, lo que permite a la empresa tomar decisiones más informadas y reducir pérdidas con el fin de poder proponer una gobernanza de datos de acuerdo con los resultados que obtuvimos.
 
 ### 💡 Conclusiones
 
